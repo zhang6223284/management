@@ -16,8 +16,6 @@ export default function AddEmployee() {
   const [formValue] = useState({
     name: '',
     id: '',
-    class: '',
-    sex: '',
   });
   const formEl = useRef(null);
 
@@ -45,39 +43,17 @@ export default function AddEmployee() {
         onChange={formChange}
       >
         <div className={styles.formContent}>
-          <h2 className={styles.formTitle}>添加学生</h2>
-          <Row className={styles.formRow}>
-            <Col l="2" className={styles.formLabel}>
-              <span>姓名：</span>
-            </Col>
-            <Col l="5">
-              <FormBinder name="name" required message="请输入正确的姓名">
-                <Input
-                  name="name"
-                  placeholder="姓名"
-                  required
-                  className={styles.inputw}
-                />
-              </FormBinder>
-              <div className={styles.formErrorWrapper}>
-                <FormError name="name" />
-              </div>
-            </Col>
-          </Row>
-
+          <h2 className={styles.formTitle}>添加成绩</h2>
           <Row className={styles.formRow}>
             <Col l="2" className={styles.formLabel}>
               <span>学号：</span>
             </Col>
             <Col l="5">
-              <FormBinder
-                name="id"
-                required
-                message="请输入正确的学号"
-              >
+              <FormBinder name="id" required message="请输入正确的学号">
                 <Input
-                  maxLength={20}
+                  name="id"
                   placeholder="学号"
+                  required
                   className={styles.inputw}
                 />
               </FormBinder>
@@ -89,39 +65,46 @@ export default function AddEmployee() {
 
           <Row className={styles.formRow}>
             <Col l="2" className={styles.formLabel}>
-              <span>班级：</span>
+              <span>课程：</span>
             </Col>
             <Col l="5">
-              <FormBinder name="class" required message="请输入正确的班级">
+              <FormBinder name="lesson">
+                <Select className={styles.inputw}>
+                  <Select.Option value="dpj">单片机</Select.Option>
+                  <Select.Option value="data">大数据</Select.Option>
+                  <Select.Option value="english">科技英语</Select.Option>
+                  <Select.Option value="rfid">RFID</Select.Option>
+                  <Select.Option value="database">数据库</Select.Option>
+                </Select>
+              </FormBinder>
+              <div className={styles.formErrorWrapper}>
+                <FormError name="lesson" />
+              </div>
+            </Col>
+          </Row>
+
+          <Row className={styles.formRow}>
+            <Col l="2" className={styles.formLabel}>
+              <span>成绩：</span>
+            </Col>
+            <Col l="5">
+              <FormBinder
+                name="score"
+                required
+                message="请输入正确的成绩"
+              >
                 <Input
-                  name="class"
-                  placeholder="班级"
-                  required
+                  maxLength={20}
+                  placeholder="成绩"
                   className={styles.inputw}
                 />
               </FormBinder>
               <div className={styles.formErrorWrapper}>
-                <FormError name="class" />
+                <FormError name="score" />
               </div>
             </Col>
           </Row>
-        
-          <Row className={styles.formRow}>
-            <Col l="2" className={styles.formLabel}>
-              <span>性别：</span>
-            </Col>
-            <Col l="5">
-              <FormBinder name="sex">
-                <Select className={styles.inputw}>
-                  <Select.Option value="boy">男</Select.Option>
-                  <Select.Option value="girl">女</Select.Option>
-                </Select>
-              </FormBinder>
-              <div className={styles.formErrorWrapper}>
-                <FormError name="sex" />
-              </div>
-            </Col>
-          </Row>
+
           <Row>
             <Col offset="2">
               <Button onClick={handleSubmit} type="primary">

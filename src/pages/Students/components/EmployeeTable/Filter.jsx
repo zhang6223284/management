@@ -35,7 +35,7 @@ export default function Filter(props) {
         </Col>
         <Col l="8">
           <div className={styles.formItem}>
-            <span className={styles.formLabel}>姓名</span>
+            <span className={styles.formLabel}>姓名：</span>
             <IceFormBinder triggerType="onBlur" name="name">
               <Input placeholder="请输入" />
             </IceFormBinder>

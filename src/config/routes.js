@@ -1,19 +1,20 @@
 import UserLayout from '@/layouts/UserLayout';
 import BasicLayout from '@/layouts/BasicLayout';
 
-import Dashboard from '@/pages/Dashboard';
 import UserLogin from '@/pages/UserLogin';
 import UserRegister from '@/pages/UserRegister';
-import Holidays from '@/pages/Holidays';
-import Events from '@/pages/Events';
-import Activites from '@/pages/Activites';
 import Scores from '@/pages/Scores';
 import Students from '@/pages/Students';
 import AddStudents from '@/pages/AddStudents';
-import Analysis from '@/pages/Analysis';
-import Setting from '@/pages/Setting';
+import ModifyScores from '@/pages/ModifyScores';
+import AddScores from '@/pages/AddScores';
 import Courses from '@/pages/Courses';
 import NotFound from '@/pages/NotFound';
+import ModifyStudents from '@/pages/ModifyStudents';
+import ModifyCourses from '@/pages/ModifyCourses';
+import AddCourses from '@/pages/AddCourses';
+
+
 
 const routerConfig = [
   {
@@ -39,22 +40,6 @@ const routerConfig = [
     component: BasicLayout,
     children: [
       {
-        path: '/dashboard',
-        component: Dashboard,
-      },
-      {
-        path: '/holidays',
-        component: Holidays,
-      },
-      {
-        path: '/events',
-        component: Events,
-      },
-      {
-        path: '/activites',
-        component: Activites,
-      },
-      {
         path: '/score',
         component: Scores,
       },
@@ -71,16 +56,32 @@ const routerConfig = [
         component: AddStudents,
       },
       {
-        path: '/analysis',
-        component: Analysis,
+        path: '/add/courses',
+        component: AddCourses,
       },
       {
-        path: '/setting',
-        component: Setting,
+        path: '/add/courses',
+        component: AddCourses,
+      },
+      {
+        path: '/add/scores',
+        component: AddScores,
       },
       {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/students',
+      },
+      {
+        path: '/modify/students',
+        component: ModifyStudents,
+      },
+      {
+        path: '/modify/courses',
+        component: ModifyCourses,
+      },
+      {
+        path: '/modify/scores',
+        component: ModifyScores,
       },
       {
         component: NotFound,

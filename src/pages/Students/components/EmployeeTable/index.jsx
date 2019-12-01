@@ -27,8 +27,16 @@ function Employee(props) {
   const [dataSource, setDataSource] = useState(getData);
 
   function handleRedirect() {
-    console.log(111);
     props.history.push('/add/students');
+  }
+
+  function handleModify(value) {
+    console.log(value);
+    const student = dataSource.filter((v) => {
+      return v.id === value;
+    })[0];
+    encodeURIComponent();
+    props.history.push(`/modify/students?id=${student.id}&name=${student.name}&sex=${student.sex}&class=${student.class}`);
   }
 
   function handleDelete(index) {
@@ -48,7 +56,7 @@ function Employee(props) {
       <div>
         <Button
           type="primary"
-          onClick={handleRedirect}
+          onClick={() => handleModify(value,index)}
           className={styles.btn}
         >
           修改
@@ -74,8 +82,33 @@ function Employee(props) {
     });
   }
 
-  function handleFilterChange() {
-    fetchData(5);
+  function handleFilterChange(value) {
+    let res = [];
+    if(value.id) {
+      res = dataSource.filter(v => {
+        v.id += '';
+        return v.id.indexOf(value.id) > -1;
+      });
+    }
+    if(value.name) {
+      if(res.length > 0){
+        res = res.filter(v => {
+          v.name += '';
+          return v.name.indexOf(value.name) > -1;
+        });
+      } else if(!value.id){
+        res = dataSource.filter(v => {
+          v.name += '';
+          return v.name.indexOf(value.name) > -1;
+        });
+      }
+    }
+
+    setDataSource(res);
+
+
+    // console.log(value);
+    // fetchData(5);
   }
 
   return (
@@ -84,7 +117,7 @@ function Employee(props) {
         title="学生列表"
         buttonText="添加学生"
         className={styles.title}
-        onClick={() => handleRedirect()}
+        onClick={handleRedirect}
       />
       <TableFilter onChange={handleFilterChange} />
       <Table dataSource={dataSource} hasBorder={false} className={styles.table}>

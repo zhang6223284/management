@@ -14,24 +14,15 @@ const random = (min, max) => {
 
 // MOCK 数据，实际业务按需进行替换
 const getData = (length = 10) => {
-  return Array.from({ length }).map(() => {
-    return {
-      id: random(10000, 100000),
-      name: ['张三', '李四'][random(0, 1)],
-      email: 'admin@example.com',
-      joinTime: `20${random(10, 20)}-0${random(1, 9)}-12`,
-      address: ['杭州市', '上海市', '北京市'][random(0, 2)],
-      role: ['设计师', '运营', '产品', '开发'][random(0, 3)],
-    };
-  });
+  return [];
 };
 
 function Employee(props) {
   const [dataSource, setDataSource] = useState(getData);
 
-  const [isLoading, setLoading] = useState(false);
+  const [id, setId] = useState('');
   function handleRedirect() {
-    props.history.push('/add/employee');
+    props.history.push('/add/scores');
   }
 
   function handleDelete(index) {
@@ -55,12 +46,20 @@ function Employee(props) {
     );
   }
 
+  function handleModify(value) {
+    console.log(value);
+    const student = dataSource.filter((v) => {
+      return v.name === value;
+    })[0];
+    props.history.push(`/modify/scores?id=${id}&name=${student.name}&score=${student.score}`);
+  }
+
   function renderOper(value, index) {
     return (
       <div>
         <Button
           type="primary"
-          onClick={handleRedirect}
+          onClick={() => handleModify(value)}
           className={styles.btn}
         >
           修改
@@ -81,9 +80,7 @@ function Employee(props) {
   }
 
   function fetchData(len) {
-    setLoading(true);
     mockApi(len).then((data) => {
-      setLoading(false);
       setDataSource(data);
     });
   }
@@ -93,38 +90,55 @@ function Employee(props) {
     fetchData(5);
   }
 
+  function handleSearch(value) {
+    console.log(value);
+    if(value.id) {
+      setId(value.id);
+      setDataSource([{
+        id: 1,
+        name: '单片机',
+        score: parseInt(Math.random() * 100),
+      }, {
+        id: 2,
+        name: '大数据',
+        score: parseInt(Math.random() * 100),
+      }, {
+        id: 3,
+        name: 'RFID',
+        score: parseInt(Math.random() * 100),
+      }, {
+        id: 4,
+        name: '科技英语',
+        score: parseInt(Math.random() * 100),
+      }, {
+        id: 5,
+        name: '数据库',
+        score: parseInt(Math.random() * 100),
+      }].slice(Math.random() * 5));
+    } else {
+      alert('请输入学号');
+    }
+
+  }
+
   return (
     <IceContainer className={styles.container}>
       <ContainerTitle
-        title="员工列表"
-        buttonText="添加员工"
+        title="成绩列表"
+        buttonText="添加成绩"
         className={styles.title}
         onClick={handleRedirect}
       />
-      <TableFilter onChange={throttle(handleFilterChange, 500, {leading: false})} />
+      <TableFilter handleSearch={handleSearch} />
       <Table
-        loading={isLoading}
         dataSource={dataSource} 
         hasBorder={false} 
         className={styles.table}
       >
-        <Table.Column dataIndex="id" title="工号" />
-        <Table.Column
-          dataIndex="name"
-          title="姓名"
-          cell={renderProfile}
-        />
-        <Table.Column dataIndex="address" title="学号" />
-        <Table.Column dataIndex="email" title="姓名" />
-        <Table.Column dataIndex="role" title="单片机" />
-        <Table.Column dataIndex="joinTime" title="大数据" />
-        <Table.Column dataIndex="role" title="RFID" />
-        <Table.Column dataIndex="joinTime" title="科技英语" />
-        <Table.Column dataIndex="role" title="数据库" />
-        <Table.Column dataIndex="joinTime" title="大数据" />
-        <Table.Column dataIndex="role" title="单片机" />
-        <Table.Column dataIndex="joinTime" title="大数据" />
-        <Table.Column dataIndex="id" title="操作" cell={renderOper} />
+        <Table.Column dataIndex="id" title="课程号" />
+        <Table.Column dataIndex="name" title="课程名" />
+        <Table.Column dataIndex="score" title="成绩" />
+        <Table.Column dataIndex="name" title="操作" cell={renderOper} />
       </Table>
     </IceContainer>
   );

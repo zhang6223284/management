@@ -2,7 +2,6 @@ import React from 'react';
 import Layout from '@icedesign/layout';
 import Header from './components/Header';
 import Aside from './components/Aside';
-import Footer from './components/Footer';
 import styles from './index.module.scss';
 
 export default function BasicLayout({ children }) {
@@ -19,7 +18,6 @@ export default function BasicLayout({ children }) {
           <div className={styles.mainContainer}>
             {children}
           </div>
-          <Footer />
         </Layout.Main>
       </Layout.Section>
     </Layout>

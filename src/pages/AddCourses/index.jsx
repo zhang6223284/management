@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import IceContainer from '@icedesign/container';
-import { Grid, Input, Button, Message, Select } from '@alifd/next';
+import { Grid, Input, Button, Message } from '@alifd/next';
 import {
   FormBinderWrapper,
   FormBinder,
@@ -16,8 +16,6 @@ export default function AddEmployee() {
   const [formValue] = useState({
     name: '',
     id: '',
-    class: '',
-    sex: '',
   });
   const formEl = useRef(null);
 
@@ -45,16 +43,16 @@ export default function AddEmployee() {
         onChange={formChange}
       >
         <div className={styles.formContent}>
-          <h2 className={styles.formTitle}>添加学生</h2>
+          <h2 className={styles.formTitle}>添加课程</h2>
           <Row className={styles.formRow}>
             <Col l="2" className={styles.formLabel}>
-              <span>姓名：</span>
+              <span>课程名：</span>
             </Col>
             <Col l="5">
-              <FormBinder name="name" required message="请输入正确的姓名">
+              <FormBinder name="name" required message="请输入正确的课程名">
                 <Input
                   name="name"
-                  placeholder="姓名"
+                  placeholder="课程名"
                   required
                   className={styles.inputw}
                 />
@@ -67,17 +65,17 @@ export default function AddEmployee() {
 
           <Row className={styles.formRow}>
             <Col l="2" className={styles.formLabel}>
-              <span>学号：</span>
+              <span>课程ID：</span>
             </Col>
             <Col l="5">
               <FormBinder
                 name="id"
                 required
-                message="请输入正确的学号"
+                message="请输入正确的课程ID"
               >
                 <Input
                   maxLength={20}
-                  placeholder="学号"
+                  placeholder="课程ID"
                   className={styles.inputw}
                 />
               </FormBinder>
@@ -87,41 +85,6 @@ export default function AddEmployee() {
             </Col>
           </Row>
 
-          <Row className={styles.formRow}>
-            <Col l="2" className={styles.formLabel}>
-              <span>班级：</span>
-            </Col>
-            <Col l="5">
-              <FormBinder name="class" required message="请输入正确的班级">
-                <Input
-                  name="class"
-                  placeholder="班级"
-                  required
-                  className={styles.inputw}
-                />
-              </FormBinder>
-              <div className={styles.formErrorWrapper}>
-                <FormError name="class" />
-              </div>
-            </Col>
-          </Row>
-        
-          <Row className={styles.formRow}>
-            <Col l="2" className={styles.formLabel}>
-              <span>性别：</span>
-            </Col>
-            <Col l="5">
-              <FormBinder name="sex">
-                <Select className={styles.inputw}>
-                  <Select.Option value="boy">男</Select.Option>
-                  <Select.Option value="girl">女</Select.Option>
-                </Select>
-              </FormBinder>
-              <div className={styles.formErrorWrapper}>
-                <FormError name="sex" />
-              </div>
-            </Col>
-          </Row>
           <Row>
             <Col offset="2">
               <Button onClick={handleSubmit} type="primary">

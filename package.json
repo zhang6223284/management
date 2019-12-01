@@ -1,31 +1,54 @@
 {
-  "name": "managment",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@icedesign/hr-management-admin-scaffold",
+  "version": "3.0.4",
+  "description": "该模板适用于人力资源类的管理后台，默认内置丰富的图表和表格区块，使用时需要根据需求进行删除和添加",
   "dependencies": {
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.2.0"
+    "@alifd/next": "^1.x",
+    "@alifd/theme-1": "^0.0.7",
+    "@antv/data-set": "^0.8.9",
+    "@icedesign/container": "^1.x",
+    "@icedesign/data-binder": "^1.x",
+    "@icedesign/form-binder": "^1.x",
+    "@icedesign/foundation-symbol": "^1.x",
+    "@icedesign/img": "^1.x",
+    "@icedesign/label": "^1.x",
+    "@icedesign/layout": "^1.x",
+    "@icedesign/theme": "^1.x",
+    "async-validator": "^1.10.1",
+    "bizcharts": "^3.4.1",
+    "classnames": "^2.2.5",
+    "koa": "^2.11.0",
+    "moment": "^2.23.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.4.1",
+    "react-router-dom": "^5.0.1",
+    "webpack": "^4.41.2"
+  },
+  "devDependencies": {
+    "@ice/spec": "^0.1.1",
+    "eslint": "^6.0.1",
+    "stylelint": "^10.1.0",
+    "ice-scripts": "^2.0.0",
+    "ice-plugin-fusion": "^0.1.4",
+    "ice-plugin-moment-locales": "^0.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "ice-scripts dev",
+    "build": "ice-scripts build",
+    "lint": "npm run eslint && npm run stylelint",
+    "eslint": "eslint --cache --ext .js,.jsx ./",
+    "stylelint": "stylelint ./**/*.scss"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "engines": {
+    "node": ">=8.0.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "iceworks": {
+    "type": "react",
+    "adapter": "adapter-react-v3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ice-lab/react-materials/tree/master/scaffolds/ice-hr-management-admin"
   }
 }

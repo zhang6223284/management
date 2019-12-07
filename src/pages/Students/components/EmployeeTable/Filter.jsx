@@ -25,22 +25,22 @@ export default function Filter(props) {
         <Col l="8">
           <div className={styles.formItem}>
             <span className={styles.formLabel}>学号：</span>
-            <IceFormBinder triggerType="onBlur" name="id">
+            <IceFormBinder triggerType="onBlur" name="stu_no">
               <Input placeholder="请输入" />
             </IceFormBinder>
             <div className={styles.formError}>
-              <IceFormError name="id" />
+              <IceFormError name="stu_no" />
             </div>
           </div>
         </Col>
         <Col l="8">
           <div className={styles.formItem}>
             <span className={styles.formLabel}>姓名：</span>
-            <IceFormBinder triggerType="onBlur" name="name">
+            <IceFormBinder triggerType="onBlur" name="stu_name">
               <Input placeholder="请输入" />
             </IceFormBinder>
             <div className={styles.formError}>
-              <IceFormError name="name" />
+              <IceFormError name="stu_name" />
             </div>
           </div>
         </Col>

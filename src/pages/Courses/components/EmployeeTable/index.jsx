@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import IceContainer from '@icedesign/container';
 import { Table, Dialog, Button } from '@alifd/next';
 import { withRouter } from 'react-router-dom';
+import reqwest from 'reqwest';
 import TableFilter from './Filter';
 import ContainerTitle from '@/components/ContainerTitle';
-
 import styles from './index.module.scss';
 
 const random = (min, max) => {
@@ -12,37 +12,48 @@ const random = (min, max) => {
 };
 
 // MOCK 数据，实际业务按需进行替换
-const getData = () => {
-  return [{
-    id: 1,
-    name: '单片机',
-  }, {
-    id: 2,
-    name: '大数据',
-  }, {
-    id: 3,
-    name: 'RFID',
-  }, {
-    id: 4,
-    name: '科技英语',
-  }, {
-    id: 5,
-    name: '数据库',
-  }];
+const getData = async() => {
+
+  const data = await reqwest({
+    url: 'http://localhost:3000/search/course',
+    method: 'get',
+  });
+
+  return data;
 };
 
 function Employee(props) {
-  const [dataSource, setDataSource] = useState(getData);
+  const [dataSource, setDataSource] = useState([]);
 
   function handleRedirect() {
     props.history.push('/add/courses');
   }
 
-  function handleDelete(index) {
+  useEffect(() => {
+    const getData = async() => {
+
+      const data = await reqwest({
+        url: 'http://localhost:3000/search/course',
+        method: 'get',
+      });
+      setDataSource(data);
+    };
+    getData();
+
+  }, []);
+
+  function handleDelete(index, value) {
+    console.log(value);
     Dialog.confirm({
       title: '提示',
       content: '确认删除吗',
-      onOk: () => {
+      onOk: async () => {
+        const result = await reqwest({
+          url: 'http://localhost:3000/delete/course',
+          method: 'post',
+          data: JSON.stringify({ c_id: value }),
+          contentType: 'application/json',
+        });
         const data = [...dataSource];
         data.splice(index, 1);
         setDataSource(data);
@@ -62,10 +73,10 @@ function Employee(props) {
   function handleModify(value){
     console.log(value);
     const student = dataSource.filter((v) => {
-      return v.id === value;
+      return v.c_id === value;
     })[0];
     encodeURIComponent();
-    props.history.push(`/modify/courses?id=${student.id}&name=${student.name}`);
+    props.history.push(`/modify/courses?id=${student.c_id}&name=${student.c_name}`);
   }
 
   function renderOper(value, index) {
@@ -78,7 +89,7 @@ function Employee(props) {
         >
           修改
         </Button>
-        <Button onClick={() => handleDelete(index)} type="normal" warning>
+        <Button onClick={() => handleDelete(index,value)} type="normal" warning>
           删除
         </Button>
       </div>
@@ -112,12 +123,12 @@ function Employee(props) {
         onClick={handleRedirect}
       />
       <Table dataSource={dataSource} hasBorder={false} className={styles.table}>
-        <Table.Column dataIndex="id" title="课程ID" />
+        <Table.Column dataIndex="c_id" title="课程ID" />
         <Table.Column
-          dataIndex="name"
+          dataIndex="c_name"
           title="课程名"
         />
-        <Table.Column dataIndex="id" title="操作" cell={renderOper} />
+        <Table.Column dataIndex="c_id" title="操作" cell={renderOper} />
       </Table>
     </IceContainer>
   );

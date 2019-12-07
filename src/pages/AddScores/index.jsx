@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import IceContainer from '@icedesign/container';
 import { Grid, Input, Button, Message, Select } from '@alifd/next';
 import {
@@ -6,7 +6,7 @@ import {
   FormBinder,
   FormError,
 } from '@icedesign/form-binder';
-
+import reqwest from 'reqwest';
 import styles from './index.module.scss';
 
 const { Row, Col } = Grid;
@@ -17,6 +17,8 @@ export default function AddEmployee() {
     name: '',
     id: '',
   });
+  const [selectOptions, setSelect] = useState([]);
+
   const formEl = useRef(null);
 
   function formChange(value) {
@@ -24,16 +26,40 @@ export default function AddEmployee() {
   }
 
   function handleSubmit() {
-    formEl.current.validateAll((errors, values) => {
+    formEl.current.validateAll(async (errors, values) => {
       if (errors) {
         console.log('errors', errors);
         return;
       }
+      const { stu_no, lesson: c_id, score: fraction } = values;
+      const result = await reqwest({
+        url: 'http://localhost:3000/add/score',
+        method: 'post',
+        data: JSON.stringify({ 
+          stu_no,
+          c_id,
+          fraction,
+        }),
+        contentType: 'application/json',
+      });
 
       console.log('values:', values);
       Toast.success('提交成功');
     });
   }
+
+
+  useEffect(() => {
+    const getData = async() => {
+      const data = await reqwest({
+        url: 'http://localhost:3000/search/course',
+        method: 'get',
+      });
+      setSelect(data);
+    };
+    getData();
+
+  }, []);
 
   return (
     <IceContainer className={styles.form}>
@@ -49,16 +75,16 @@ export default function AddEmployee() {
               <span>学号：</span>
             </Col>
             <Col l="5">
-              <FormBinder name="id" required message="请输入正确的学号">
+              <FormBinder name="stu_no" required message="请输入正确的学号">
                 <Input
-                  name="id"
+                  name="stu_no"
                   placeholder="学号"
                   required
                   className={styles.inputw}
                 />
               </FormBinder>
               <div className={styles.formErrorWrapper}>
-                <FormError name="id" />
+                <FormError name="stu_no" />
               </div>
             </Col>
           </Row>
@@ -70,11 +96,9 @@ export default function AddEmployee() {
             <Col l="5">
               <FormBinder name="lesson">
                 <Select className={styles.inputw}>
-                  <Select.Option value="dpj">单片机</Select.Option>
-                  <Select.Option value="data">大数据</Select.Option>
-                  <Select.Option value="english">科技英语</Select.Option>
-                  <Select.Option value="rfid">RFID</Select.Option>
-                  <Select.Option value="database">数据库</Select.Option>
+                {selectOptions.map((v) => {
+                    return <Select.Option value={v.c_id}>{v.c_name}</Select.Option>;
+                  })}
                 </Select>
               </FormBinder>
               <div className={styles.formErrorWrapper}>

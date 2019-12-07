@@ -6,7 +6,7 @@ import {
   FormBinder,
   FormError,
 } from '@icedesign/form-binder';
-
+import reqwest from 'reqwest';
 import styles from './index.module.scss';
 
 const { Row, Col } = Grid;
@@ -71,11 +71,10 @@ export default function AddEmployee() {
 
 
   const student = getAllUrlParams(location.href);
+  console.log(student);
   const [formValue] = useState({
     name: decodeURIComponent(student.name),
     id: student.id,
-    class: decodeURIComponent(student.class),
-    sex: decodeURIComponent(student.sex) === '男' ? 'boy' : 'girl',
   });
   const formEl = useRef(null);
 
@@ -85,16 +84,26 @@ export default function AddEmployee() {
   }
 
   function handleSubmit() {
-    formEl.current.validateAll((errors, values) => {
+    formEl.current.validateAll(async (errors, values) => {
       if (errors) {
         console.log('errors', errors);
         return;
       }
-
+      const { id, name } = values;
+      const result = await reqwest({
+        url: 'http://localhost:3000/modify/course',
+        method: 'post',
+        data: JSON.stringify({ 
+          c_id: id,
+          c_name: name,
+        }),
+        contentType: 'application/json',
+      });
       console.log('values:', values);
       Toast.success('提交成功');
     });
   }
+
 
   return (
     <IceContainer className={styles.form}>
@@ -137,6 +146,7 @@ export default function AddEmployee() {
                 <Input
                   maxLength={20}
                   placeholder="课程ID"
+                  disabled
                   className={styles.inputw}
                 />
               </FormBinder>

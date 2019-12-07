@@ -6,7 +6,7 @@ import {
   FormBinder,
   FormError,
 } from '@icedesign/form-binder';
-
+import reqwest from 'reqwest';
 import styles from './index.module.scss';
 
 const { Row, Col } = Grid;
@@ -24,17 +24,26 @@ export default function AddEmployee() {
   }
 
   function handleSubmit() {
-    formEl.current.validateAll((errors, values) => {
+    formEl.current.validateAll(async (errors, values) => {
       if (errors) {
         console.log('errors', errors);
         return;
       }
+      const { id, name } = values;
+      const result = await reqwest({
+        url: 'http://localhost:3000/add/course',
+        method: 'post',
+        data: JSON.stringify({ 
+          c_id: id,
+          c_name: name,
+        }),
+        contentType: 'application/json',
+      });
 
       console.log('values:', values);
       Toast.success('提交成功');
     });
   }
-
   return (
     <IceContainer className={styles.form}>
       <FormBinderWrapper

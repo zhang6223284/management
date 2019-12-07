@@ -6,7 +6,7 @@ import {
   FormBinder,
   FormError,
 } from '@icedesign/form-binder';
-
+import reqwest from 'reqwest';
 import styles from './index.module.scss';
 
 const { Row, Col } = Grid;
@@ -85,12 +85,24 @@ export default function AddEmployee() {
   }
 
   function handleSubmit() {
-    formEl.current.validateAll((errors, values) => {
+    formEl.current.validateAll(async (errors, values) => {
       if (errors) {
         console.log('errors', errors);
         return;
       }
-
+      const { id, class: stu_class, name, sex } = values;
+      const stu_gender = sex && sex === 'boy' ? '男' : '女';
+      const result = await reqwest({
+        url: 'http://localhost:3000/modify/stu',
+        method: 'post',
+        data: JSON.stringify({ 
+          stu_no: id,
+          stu_class,
+          stu_name: name,
+          stu_gender,
+        }),
+        contentType: 'application/json',
+      });
       console.log('values:', values);
       Toast.success('提交成功');
     });
@@ -137,6 +149,7 @@ export default function AddEmployee() {
                 <Input
                   maxLength={20}
                   placeholder="学号"
+                  disabled
                   className={styles.inputw}
                 />
               </FormBinder>
@@ -171,7 +184,7 @@ export default function AddEmployee() {
             </Col>
             <Col l="5">
               <FormBinder name="sex">
-                <Select className={styles.inputw}>
+                <Select className={styles.inputw} required>
                   <Select.Option value="boy">男</Select.Option>
                   <Select.Option value="girl">女</Select.Option>
                 </Select>

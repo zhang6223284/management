@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import IceContainer from '@icedesign/container';
 import { Grid, Input, Button, Message, Select } from '@alifd/next';
 import {
@@ -6,13 +6,14 @@ import {
   FormBinder,
   FormError,
 } from '@icedesign/form-binder';
-
+import reqwest from 'reqwest';
 import styles from './index.module.scss';
 
 const { Row, Col } = Grid;
 const Toast = Message;
 
 export default function AddEmployee() {
+  const [selectOptions, setSelect] = useState([]);
 
   function getAllUrlParams(url) {
     // 用JS拿到URL，如果函数接收了URL，那就用函数的参数。如果没传参，就使用当前页面的URL
@@ -71,17 +72,6 @@ export default function AddEmployee() {
 
 
   const student = getAllUrlParams(location.href);
-  if(decodeURIComponent(student.name) === '单片机') {
-    student.name = 'dpj';
-  } else if (decodeURIComponent(student.name) === 'RFID') {
-    student.name = 'rfid';
-  }else if (decodeURIComponent(student.name) === '大数据') {
-    student.name = 'data';
-  }else if (decodeURIComponent(student.name) === '数据库') {
-    student.name = 'database';
-  }else if (decodeURIComponent(student.name) === '科技英语') {
-    student.name = 'english';
-  }
   console.log(student);
   const [formValue] = useState({
     lesson: decodeURIComponent(student.name),
@@ -95,13 +85,37 @@ export default function AddEmployee() {
     console.log(value);
   }
 
+
+  useEffect(() => {
+    const getData = async() => {
+      const data = await reqwest({
+        url: 'http://localhost:3000/search/course',
+        method: 'get',
+      });
+      setSelect(data);
+    };
+    getData();
+
+  }, []);
+
   function handleSubmit() {
-    formEl.current.validateAll((errors, values) => {
+    formEl.current.validateAll(async (errors, values) => {
+      console.log(values);
       if (errors) {
         console.log('errors', errors);
         return;
       }
-
+      const { id: stu_no, lesson: c_id, score: fraction } = values;
+      const result = await reqwest({
+        url: 'http://localhost:3000/modify/score',
+        method: 'post',
+        data: JSON.stringify({ 
+          stu_no,
+          c_id,
+          fraction,
+        }),
+        contentType: 'application/json',
+      });
       console.log('values:', values);
       Toast.success('提交成功');
     });
@@ -126,6 +140,7 @@ export default function AddEmployee() {
                   name="id"
                   placeholder="学号"
                   required
+                  disabled
                   className={styles.inputw}
                 />
               </FormBinder>
@@ -141,12 +156,10 @@ export default function AddEmployee() {
             </Col>
             <Col l="5">
               <FormBinder name="lesson">
-                <Select className={styles.inputw}>
-                  <Select.Option value="dpj">单片机</Select.Option>
-                  <Select.Option value="data">大数据</Select.Option>
-                  <Select.Option value="english">科技英语</Select.Option>
-                  <Select.Option value="rfid">RFID</Select.Option>
-                  <Select.Option value="database">数据库</Select.Option>
+                <Select className={styles.inputw} disabled>
+                  {selectOptions.map((v) => {
+                    return <Select.Option value={v.c_id}>{v.c_name}</Select.Option>;
+                  })}
                 </Select>
               </FormBinder>
               <div className={styles.formErrorWrapper}>
